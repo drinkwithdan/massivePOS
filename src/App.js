@@ -23,7 +23,7 @@ const App = () => {
   const addToCart = (product, quantity) => {
 
     // Create Boolean to check if item is in cart
-    const inCart = (product) => cart.items.find((item) => item.id === product.id)
+    const inCart = (product) => cart.items.find((item) => item.item_id === product.item_id)
 
     let items
 
@@ -39,7 +39,7 @@ const App = () => {
 
       // Otherwise increment the product amount by the quantity parameter
       items = cart.items.map((item) => {
-        if (product.id !== item.id) return item
+        if (product.item_id !== item.item_id) return item
         return { ...item, cartQuantity: item.cartQuantity + quantity }
       })
     }
@@ -74,7 +74,7 @@ const App = () => {
   // }
 
   return (
-    <div>
+    <div className="App">
       <Routes>
 
         <Route path="/" element={products && <Home 

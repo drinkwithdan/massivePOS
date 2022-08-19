@@ -1,7 +1,7 @@
 import CartCard from "./CartCard"
 
 const CartList = ({ cart }) => {
-  const cartList = cart.map((item) => {
+  const cartList = cart.items.map((item) => {
     return <CartCard item={item} />
   })
 
