@@ -15,7 +15,6 @@ const ItemCard = ({ item, cart, addToCart }) => {
     const changeCartCount = () => {
       const cartItem = cart.items.find((product) => product.id === item.id)
       const newCartCount = cartItem.cartQuantity
-      console.log(newCartCount);
       setCartCount(newCartCount)
     }
     

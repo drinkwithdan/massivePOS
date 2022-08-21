@@ -6,8 +6,7 @@ const ItemList = ({products, cart, addToCart}) => {
 
   const itemsList = products.map((item) => {
     return <ItemCard 
-      key={item.id} 
-      id={item.id} 
+      key={item.item_id} 
       item={item}
       cart={cart}
       addToCart={addToCart}
@@ -19,7 +18,7 @@ const ItemList = ({products, cart, addToCart}) => {
       <div className="card-container">
         <h2>Add items to cart</h2>
         {products && itemsList}
-        <button className="goto-cart-button">GO TO CART</button>
+        <Link to="/cart" className="goto-cart-button">GO TO CART</Link>
       </div>
     </div>
   )

@@ -1,16 +1,30 @@
-const CartCard = ({ item }) => {
+const CartCard = ({ item, removeFromCart }) => {
+
+  // Handles delete button clicks
+  const handleClick = () => {
+    removeFromCart(item)
+  }
+
   return (
     <div className="cart-card">
       <div className="cart-card-text">
         <div>
-          {item.name} ({item.cartQuantity} in cart)
+          {item.name}
         </div>
         <div>
-          ${(item.price * item.cartQuantity).toFixed(2)}
+          ({item.cartQuantity} in cart)
         </div>
       </div>
-      <div className="cart-card-delete">
-        <button>REMOVE</button>
+      <div className="cart-card-list-right">
+        <div style={{ margin: "5px" }}>
+          ${(item.price * item.cartQuantity).toFixed(2)}
+        </div>
+        <button
+          className="cart-card-delete"
+          onClick={handleClick}
+        >
+          REMOVE
+        </button>
       </div>
     </div>
   )
