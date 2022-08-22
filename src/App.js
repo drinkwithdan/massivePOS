@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react"
 import { Routes, Route, useNavigate } from "react-router-dom"
+import {v4 as uuid} from "uuid"
 import './App.css';
 import Home from './components/Home';
 import Cart from './components/Cart'
 import Checkout from "./components/Checkout";
 import Success from "./components/Success"
 import Orders from "./components/Orders"
+import NewItem from "./components/NewItem"
+import Login from "./components/Login"
+import AdminItems from "./components/AdminItems"
 import itemsData from "./data/items-data";
+import EditItem from "./components/EditItem";
 
 const App = () => {
   const [products, setProducts] = useState(itemsData)
@@ -17,9 +22,15 @@ const App = () => {
     subTotal: 0
   })
 
-
-
+  // Set navigate variable
   const navigate = useNavigate()
+
+  // Get access to localStorage
+  const getLocalCart = JSON.parse(localStorage.getItem("cart"))
+  const getLocalOrders = JSON.parse(localStorage.getItem("orders"))
+
+  // // Clears all localStorage
+  // localStorage.clear()
 
   useEffect(() => {
     // TO-DO:
@@ -27,30 +38,46 @@ const App = () => {
     // Use dummy date in the meantime
   }, [])
 
-  // localStorage.removeItem("cart")
-  //  localStorage.setItem("cart", JSON.stringify([]))
+  // On mount check if a local cart exists and set cart state if so
+  useEffect(() => {
+    if (cart.items.length === 0 && getLocalCart !== null) {
+      setCart(getLocalCart)
+    }
+  }, [])
 
-  // TO-DO: Check local storage and check if "cart exists"
-  // If so, set cart state, otherwise create "cart"
+  useEffect(() => {
+    if (orders.length === 0 && getLocalOrders !== null) {
+      setOrders(getLocalOrders)
+    }
+  }, [])
 
-  // // On mount check if a local cart exists and set cart state if so
-  // useEffect(() => {
+  const handleLogin = (data) => {
+    console.log(data);
+  }
 
-  //   const getLocalCart = () => {
-  //     let localCart = []
+  const handleNew = (newItem) => {
+    // TO-DO: create fetch and POST to database
+    newItem.id = uuid()
+    setProducts([
+      ...products,
+      newItem
+    ])
+    navigate("/items")
+  }
 
-  //     if (JSON.parse(localStorage.getItem("cart"))) {
-  //       localCart = JSON.parse(localStorage.getItem("cart"))
-  //       console.log("Local cart got");
-  //     }
-  //     return localCart
-  //   }
+  const handleEdit = (editedItem) => {
+    // TO-DO: Hook it up
+    // setProducts([
+    //   ...products.splice(0, index),
+    //   editedItem,
+    //   ...products.splice(index + 1)
+    // ])
+  }
 
-  //   if (cart.items.length === 0) {
-  //     const localCart = getLocalCart()
-  //     setCart(localCart)
-  //   }
-  // }, [])
+  const handleDelete = (itemToDelete) => {
+    // TO-DO; Hook it up
+    console.log("Delete", itemToDelete.name);
+  }
 
   // Adds item to cart with the current counter quantity
   const addToCart = (product, quantity) => {
@@ -110,6 +137,7 @@ const App = () => {
     // Sets the cart state with the new updated array
     localStorage.setItem("cart", JSON.stringify({ items: newCartItems, ...totals }))
     setCart({ items: newCartItems, ...totals })
+    console.log(getLocalCart);
   }
 
   // Take form from checkout and append items to orders state
@@ -118,14 +146,19 @@ const App = () => {
     const newOrders = [...orders]
     newOrders.push({
       items: [...cart.items],
+      id: uuid(),
+      timestamp: Date.now(),
       name: form.name,
-      contact: form.telephone
+      contact: form.telephone,
+      status: 1
     })
 
     // TO-DO: Add new order to database
 
-    // Set new orders state and empty cart
+    // Set new orders state and empty cart and localStorage
     setOrders(newOrders)
+    localStorage.setItem("orders", JSON.stringify(newOrders))
+    localStorage.removeItem("cart")
     setCart({
       items: [],
       totalQuantity: 0,
@@ -139,7 +172,7 @@ const App = () => {
     <div className="App">
       <Routes>
 
-        <Route path="/" element={products && <Home
+        <Route path="/home" element={products && <Home
           products={products}
           addToCart={addToCart}
           cart={cart}
@@ -155,7 +188,19 @@ const App = () => {
 
         <Route path="/success" element={<Success cart={cart} />} />
 
-        <Route path="/orders" element={<Orders orders={orders} />} />
+        <Route path="/items" element={products && <AdminItems 
+            products={products}
+            handleDelete={handleDelete} 
+          />} 
+        />
+
+        <Route path="/items/new" element={<NewItem handleNew={handleNew} />} />
+
+        <Route path="/items/edit/:id" element={products && <EditItem products={products} />} />
+
+        <Route path="/login" element={<Login handleLogin={handleLogin} />} />
+
+        <Route path="/orders" element={orders && <Orders orders={orders} />} />
 
       </Routes>
     </div>

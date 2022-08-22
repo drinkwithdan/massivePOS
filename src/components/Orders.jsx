@@ -1,23 +1,27 @@
-const Order = (order) => {
-  return (
-    <div className="order">
-      <h3>{order.name}</h3>
-      <h3>{order.telephone}</h3>
-      {order.items}
-    </div>
-  )
-}
+import { OrderRailOne } from "./OrderRailOne"
+
+// // REDUNDANT CODE?
+// const Order = (order) => {
+//   const itemsList = order.order.items.map((item) => {
+//     return <li>{item.name} x {item.cartQuantity}</li>
+//   })
+//   return (
+//     <div className="order">
+//       <h3>{order.order.name}</h3>
+//       <h3>{order.order.contact}</h3>
+//       <ul>
+//         {itemsList}
+//       </ul>
+//     </div>
+//   )
+// }
 
 const Orders = ({ orders }) => {
-  console.log(orders);
-  const orderList = orders.map((order) => {
-    return order
-  })
 
   return (
     <div className="orders">
       <h1>Orders</h1>
-      {orderList}
+      <OrderRailOne orders={orders}/>
     </div>
   )
 }

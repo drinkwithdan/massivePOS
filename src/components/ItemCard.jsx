@@ -3,26 +3,15 @@ import { useState, useEffect } from "react"
 const ItemCard = ({ item, cart, addToCart }) => {
 
   // Counter state for each Item card
-  const [counter, setCounter] = useState(0)
+  const [counter, setCounter] = useState(1)
 
-  // Current amount of items in cart
-  const [cartCount, setCartCount] = useState(0)
-
-  // Triggers an update of cartCount state when cart is altered
-  useEffect(() => {
-
-    // Updates local cartCount state
-    const changeCartCount = () => {
-      const cartItem = cart.items.find((product) => product.id === item.id)
-      const newCartCount = cartItem.cartQuantity
-      setCartCount(newCartCount)
-    }
-    
-    // Only fire if there are items in cart
-    if (cart.items.length > 0) {
-      changeCartCount()
-    }
-  }, [cart])
+  const itemInCart = cart.items.find((product) => product.item_id === item.item_id)
+  let numberInCart
+  if (itemInCart === undefined) {
+    numberInCart = 0
+  } else {
+    numberInCart = itemInCart.cartQuantity
+  }
 
   // Handle clicks on counter and add-to-cart buttons
   const handleButtonClick = (event) => {
@@ -54,7 +43,7 @@ const ItemCard = ({ item, cart, addToCart }) => {
         <div className="card-title">
 
           <div>
-            {item.name}
+            {item.name} {numberInCart && <span id="cart-count">({numberInCart} in cart)</span>}
           </div>
 
           <div>
